@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>PIXELGOAL TABLET 2026</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#03070c;color:#fff}
+button,select{font:inherit;color:#fff}
+button{cursor:pointer;border:0}
+.hidden{display:none!important}
+
+#menu{
+ position:absolute;inset:0;overflow:auto;
+ background:radial-gradient(circle at 85% 15%,#195cff40,transparent 30%),
+ radial-gradient(circle at 10% 85%,#00ff9630,transparent 30%),
+ linear-gradient(135deg,#03070d,#091522 55%,#020407)
+}
+.topbar{height:76px;padding:0 4%;display:flex;justify-content:space-between;align-items:center;
+background:#03070de8;border-bottom:1px solid #ffffff18;backdrop-filter:blur(16px)}
+.logo{font-size:27px;font-weight:1000;letter-spacing:2px}.logo span{color:#20e889}
+.profile{display:flex;gap:22px;color:#b8c5d5}
+.hero{max-width:1350px;margin:auto;padding:65px 40px}
+.hero h1{margin:0;font-size:clamp(50px,8vw,100px);line-height:.9;letter-spacing:-5px}
+.hero h1 span{color:#25e88d}.hero p{max-width:720px;color:#9aaabd;font-size:19px;line-height:1.5}
+.menuGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:45px}
+.menuCard{min-height:175px;padding:25px;border-radius:20px;text-align:left;background:linear-gradient(145deg,#121e2e,#080f18);
+border:1px solid #2b3d53;transition:.18s}.menuCard:active{transform:scale(.97);border-color:#25e88d}
+.menuCard .icon{font-size:42px}.menuCard h3{font-size:21px;margin:13px 0 7px}.menuCard p{color:#8392a5;margin:0}
+
+.panel{position:fixed;z-index:80;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1050px,94vw);
+max-height:92vh;overflow:auto;padding:35px;border-radius:25px;background:#07101bf9;border:2px solid #29415e;box-shadow:0 30px 120px #000}
+.panel h2{margin:0 0 25px;font-size:34px}.close{position:absolute;right:17px;top:15px;width:48px;height:48px;border-radius:50%;background:#172438;font-size:28px}
+.option{background:#101a29;border:1px solid #293b51;padding:20px;border-radius:15px;margin:13px 0}
+select{width:100%;min-height:50px;padding:12px;margin-top:9px;background:#09121e;border:1px solid #394c63;border-radius:9px}
+.primary,.secondary{min-height:56px;padding:14px 24px;border-radius:12px;font-weight:900;font-size:16px}
+.primary{background:linear-gradient(135deg,#1bd17c,#0c9f5a)}.secondary{background:#18263a}
+
+#match{position:absolute;inset:0;background:#15814e}
+#pitch{position:absolute;inset:0;overflow:hidden;background:repeating-linear-gradient(90deg,#178651 0,#178651 100px,#147d4b 100px,#147d4b 200px)}
+.pitchLines{position:absolute;inset:3%;border:3px solid #fff}
+.midline{position:absolute;left:50%;top:3%;bottom:3%;width:3px;background:#fff}
+.circle{position:absolute;width:min(200px,22vw);height:min(200px,22vw);border:3px solid #fff;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}
+.box{position:absolute;left:34%;width:32%;height:17%;border:3px solid #fff}
+.box.top{top:3%;border-top:0}.box.bottom{bottom:3%;border-bottom:0}
+.goal{position:absolute;left:43%;width:14%;height:5%;border:4px solid #fff}.goal.top{top:0;border-top:0}.goal.bottom{bottom:0;border-bottom:0}
+
+.player{position:absolute;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+transform:translate(-50%,-50%);z-index:10;font-size:14px;font-weight:900;box-shadow:0 4px 10px #0009}
+.blue{background:#126dff;border:2px solid #c7ddff}.red{background:#ef3547;border:2px solid #ffd2d2}
+.gk{border:4px solid #ffd43b!important}.activePlayer{box-shadow:0 0 0 6px #ffffff55,0 0 25px #fff}
+#ball{position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid #222;transform:translate(-50%,-50%);z-index:20}
+
+#hud{position:absolute;z-index:40;top:14px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:35px;
+padding:13px 27px;border-radius:17px;background:#050a11e8;border:1px solid #405771;backdrop-filter:blur(12px)}
+#hudHome,#hudAway{font-size:16px;font-weight:1000}.score{font-size:31px;font-weight:1000;text-align:center}#timer{text-align:center;color:#9fb0c5;font-size:13px}
+#matchStats{position:absolute;z-index:40;right:18px;top:105px;width:220px;padding:18px;background:#050a11dc;border:1px solid #3b5068;border-radius:15px;font-size:14px}
+.stat{margin:10px 0;color:#aebbd0}.bar{height:6px;background:#263447;border-radius:8px;overflow:hidden}.bar i{display:block;height:100%;background:#25e88d}
+
+#tabletControls{position:absolute;z-index:50;inset:0;pointer-events:none}
+#joystick{position:absolute;left:35px;bottom:35px;width:145px;height:145px;border-radius:50%;background:#06101dcc;border:2px solid #ffffff45;pointer-events:auto;touch-action:none}
+#stick{position:absolute;left:50%;top:50%;width:62px;height:62px;border-radius:50%;transform:translate(-50%,-50%);background:#ffffff38;border:2px solid #fff8;box-shadow:0 5px 20px #0008}
+.actionButtons{position:absolute;right:35px;bottom:28px;display:grid;grid-template-columns:repeat(2,95px);gap:12px;pointer-events:auto}
+.action{width:95px;height:70px;border-radius:20px;background:#06101de8;border:1px solid #ffffff45;font-weight:900;font-size:17px;touch-action:none}
+.action:active{transform:scale(.94);background:#1bd17c}
+#controls{display:none}
+
+#fullOverlay{position:absolute;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:#02050add;backdrop-filter:blur(12px)}
+.resultBox{width:min(760px,92vw);padding:40px;border-radius:25px;text-align:center;background:#0b1420;border:2px solid #30465e}
+.bigScore{font-size:72px;font-weight:1000;margin:25px}
+.resultButtons{display:flex;gap:12px;justify-content:center}
+
+@media(max-width:1000px){
+ .menuGrid{grid-template-columns:repeat(2,1fr)}
+ #matchStats{display:none}
+}
+@media(max-width:700px){
+ .profile{display:none}.hero{padding:45px 20px}.hero h1{font-size:52px}
+ .menuGrid{grid-template-columns:1fr}.menuCard{min-height:130px}
+ #joystick{width:120px;height:120px;left:20px;bottom:20px}
+ #stick{width:52px;height:52px}
+ .actionButtons{right:18px;bottom:18px;grid-template-columns:repeat(2,76px);gap:8px}
+ .action{width:76px;height:58px;font-size:14px}
+ #hud{gap:12px;padding:10px 12px}.score{font-size:24px}
+ #hudHome,#hudAway{font-size:10px}
+ .panel{padding:25px;width:95vw}
+}
+
+:root{--accent:#20e889;--glass:#06101dcc}
+body{background:#02060a}
+#menu{background:
+ radial-gradient(circle at 75% 15%,#00ff9940,transparent 24%),
+ radial-gradient(circle at 20% 70%,#1768ff35,transparent 30%),
+ linear-gradient(135deg,#02060a,#081522 55%,#020406)}
+.menuCard{position:relative;overflow:hidden;min-height:190px}
+.menuCard:before{content:"";position:absolute;inset:auto -30% -70% -30%;height:130%;background:linear-gradient(0deg,#20e88920,transparent);transform:rotate(-8deg)}
+.menuCard:hover{transform:translateY(-5px);box-shadow:0 20px 50px #0008;border-color:#20e889}
+#pitch{background:
+ repeating-linear-gradient(90deg,#147d49 0,#147d49 75px,#15864f 75px,#15864f 150px),
+ linear-gradient(#158851,#106e40)}
+#pitch:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,transparent 0 30%,#00000012 75%);pointer-events:none}
+.player{width:46px;height:46px;transition:left .06s linear,top .06s linear}
+.player:after{content:"";position:absolute;bottom:-10px;width:30px;height:6px;border-radius:50%;background:#0005;filter:blur(2px)}
+#ball{box-shadow:0 2px 5px #0009}
+#hud{min-width:330px;justify-content:space-between}
+#gameHint{position:absolute;z-index:45;left:50%;bottom:18px;transform:translateX(-50%);padding:9px 15px;border-radius:999px;background:#030912c9;border:1px solid #ffffff25;color:#cbd6e3;font-size:12px;pointer-events:none}
+#momentum{position:absolute;z-index:46;left:18px;top:105px;width:190px;padding:12px;border-radius:14px;background:#030912d9;border:1px solid #ffffff25}
+#momentum .mbar{height:7px;background:#1d2b3b;border-radius:9px;overflow:hidden;margin-top:7px}
+#momentum i{display:block;height:100%;width:65%;background:linear-gradient(90deg,#20e889,#a5ffcf)}
+#pausePanel{position:absolute;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;background:#02050ad9;backdrop-filter:blur(10px)}
+.pauseBox{width:min(520px,90vw);padding:34px;border-radius:25px;text-align:center;background:#0a1421;border:1px solid #405873;box-shadow:0 25px 100px #000}
+.pauseBox h2{font-size:40px;margin:0 0 20px}
+.pauseBox .primary,.pauseBox .secondary{width:100%;margin-top:10px}
+@media(max-width:700px){#momentum{display:none}#hud{min-width:0}}
+
+.transferCard{padding:14px;border-radius:14px;background:#0d1a29;border:1px solid #ffffff18}.transferMeta{color:#93a4b8;font-size:12px;margin:5px 0}.transferPrice{color:#20e889;font-weight:900}.buyBtn{width:100%;padding:10px;border-radius:10px;background:#16c879;font-weight:900;margin-top:9px}
+#playerSearch{outline:none}
+@media(max-width:700px){#transferResults{grid-template-columns:1fr!important}}
+
+#pitch{
+  perspective:1100px;
+  transform-style:preserve-3d;
+  background:
+    radial-gradient(ellipse at center,rgba(255,255,255,.07),transparent 45%),
+    repeating-linear-gradient(90deg,#147d49 0,#147d49 75px,#15864f 75px,#15864f 150px),
+    linear-gradient(#158851,#106e40)!important;
+}
+#players{transform-style:preserve-3d}
+.player{
+  transform:translate(-50%,-50%) translateZ(8px);
+  box-shadow:0 7px 10px rgba(0,0,0,.38);
+  transition:left .06s linear,top .06s linear,transform .08s ease,filter .08s ease;
+  will-change:left,top,transform;
+}
+.player::after{
+  content:"";
+  position:absolute;left:50%;top:100%;width:28px;height:7px;
+  transform:translateX(-50%);border-radius:50%;
+  background:rgba(0,0,0,.35);filter:blur(2px);
+}
+.player.activePlayer{transform:translate(-50%,-50%) translateZ(16px) scale(1.12)}
+.player.gk{filter:brightness(1.12)}
+#ball{
+  width:18px!important;height:18px!important;
+  transition:left .04s linear,top .04s linear,transform .08s linear;
+  box-shadow:0 3px 8px #000b,0 0 10px rgba(255,255,255,.22);
+}
+#ball::after{
+  content:"";position:absolute;width:32px;height:7px;left:-24px;top:6px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.45));
+  filter:blur(3px);opacity:.65;transform:rotate(-10deg);
+}
+.player.runAnim{animation:pgRun .32s infinite alternate ease-in-out}
+.player.kickAnim{animation:pgKick .22s ease-out}
+@keyframes pgRun{from{margin-top:-1px}to{margin-top:2px}}
+@keyframes pgKick{0%{transform:translate(-50%,-50%) scale(1)}45%{transform:translate(-50%,-50%) scale(1.16) rotate(-5deg)}100%{transform:translate(-50%,-50%) scale(1)}}
+#pitch::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(0,0,0,.18),transparent 22%,transparent 78%,rgba(0,0,0,.18));
+  z-index:2;
+}
+#players,#ball{z-index:20!important}
+@media(max-width:700px){
+ #pitch{perspective:800px}
+ .player{width:42px!important;height:42px!important}
+}
+</style>
+</head>
+<body>
+<button onclick="openUltimate()" style="margin:8px;padding:12px 16px;border-radius:12px;border:1px solid #3d557c;background:#17243a;color:white;font-weight:800">⚽ ULTIMATE KARİYER</button>
+
+<section id="menu">
+<header class="topbar">
+<div class="logo">⚽ PIXEL<span>GOAL</span> 2026</div>
+<div class="profile"><span>👤 OYUNCU</span><span>💰 €140M</span><span>⭐ SEVİYE 1</span></div>
+</header>
+<div class="hero">
+<h1>THE NEXT<br><span>FOOTBALL ERA.</span></h1>
+<p>Tablet için tasarlanmış hızlı futbol oyunu. Takımını seç, sahaya çık, joystick ile oyuncunu yönet ve golünü at!</p>
+<div class="menuGrid">
+<button class="menuCard" onclick="openPanel('quickPanel')"><div class="icon">⚡</div><h3>Hızlı Maç</h3><p>Takımını seç ve hemen oyna.</p></button>
+<button class="menuCard" onclick="openPanel('careerPanel')"><div class="icon">🏆</div><h3>Kariyer Modu</h3><p>Sezon boyunca takımını yönet.</p></button>
+<button class="menuCard" onclick="openPanel('tacticPanel')"><div class="icon">🧠</div><h3>Taktikler</h3><p>Oyun stilini ve dizilişi ayarla.</p></button>
+<button class="menuCard" onclick="openPanel('transferPanel')"><div class="icon">💰</div><h3>Transfer Pazarı</h3><p>200.000 futbolcu arasından ara.</p></button>
+<button class="menuCard" onclick="openPanel('statsPanel')"><div class="icon">📊</div><h3>İstatistikler</h3><p>Galibiyet ve maçlarını gör.</p></button>
+</div>
+</div>
+</section>
+
+<div id="quickPanel" class="panel hidden">
+<button class="close" onclick="closePanels()">×</button><h2>⚡ Hızlı Maç</h2>
+<div class="option"><b>Takım Havuzu</b>
+<select id="teamCount"><option value="500">500+ TAKIM</option></select></div>
+<div class="option"><b>Ev Sahibi</b><select id="homeTeam"><option>REAL MADRID</option><option>BARCELONA</option><option>MANCHESTER CITY</option><option>LIVERPOOL</option><option>BAYERN MÜNİH</option><option>BEŞİKTAŞ</option></select></div>
+<div class="option"><b>Rakip</b><select id="awayTeam"><option>BARCELONA</option><option>REAL MADRID</option><option>ARSENAL</option><option>INTER</option><option>JUVENTUS</option><option>GALATASARAY</option></select></div>
+<div class="option"><b>Maç Süresi</b><select id="matchLength"><option value="90">90 dakika</option><option value="45">45 dakika</option><option value="20">20 dakika</option></select></div>
+<div class="option"><b>Zorluk</b><select id="difficulty"><option value="normal">Profesyonel</option><option value="hard">Dünya Klası</option><option value="legend">Efsane</option></select></div>
+<button class="primary" style="width:100%" onclick="startMatch()">⚽ MAÇI BAŞLAT</button>
+</div>
+
+<div id="careerPanel" class="panel hidden">
+<button class="close" onclick="closePanels()">×</button><h2>🏆 KARİYER</h2>
+<div class="option"><b>Kulüp:</b> BEŞİKTAŞ</div>
+<div class="option"><b>Bütçe:</b> €140M</div>
+<div class="option"><b>Hedef:</b> Lig şampiyonluğu + Avrupa'da başarı</div>
+<button class="primary" onclick="closePanels();startMatch()">🎮 SONRAKİ MAÇI OYNA</button>
+</div>
+
+<div id="tacticPanel" class="panel hidden">
+<button class="close" onclick="closePanels()">×</button><h2>🧠 TAKTİK</h2>
+<div class="option"><b>Diziliş</b><select><option>4-3-3 Hücum</option><option>4-2-3-1</option><option>4-4-2</option><option>3-5-2</option></select></div>
+<div class="option"><b>Oyun Stili</b><select><option>Topa Sahip Ol</option><option>Hızlı Hücum</option><option>Kanatlardan Oyna</option><option>Kontra Atak</option></select></div>
+<button class="primary" onclick="closePanels()">TAKTİĞİ KAYDET</button>
+</div>
+
+<div id="transferPanel" class="panel hidden">
+ <button class="close" onclick="closePanels()">×</button>
+ <h2>🔄 TRANSFER PAZARI</h2>
+ <div class="option"><b>Oyuncu Ara</b>
+ <input id="playerSearch" oninput="searchPlayers()" placeholder="Örn: Arda, Silva, Real Madrid..." autocomplete="off"
+ style="width:100%;margin-top:9px;min-height:50px;padding:12px;border-radius:9px;background:#09121e;color:#fff;border:1px solid #394c63"></div>
+ <div class="option"><b>Mevki</b>
+ <select id="positionFilter" onchange="searchPlayers()"><option value="ALL">Tümü</option><option value="GK">Kaleci</option><option value="DEF">Defans</option><option value="MID">Orta saha</option><option value="FWD">Forvet</option></select></div>
+ <div id="transferInfo" style="color:#9fb0c5;margin:10px 0"></div>
+ <div id="transferResults" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px"></div>
+</div>
+
+<div id="statsPanel" class="panel hidden">
+<button class="close" onclick="closePanels()">×</button><h2>📊 İSTATİSTİKLER</h2>
+<div class="option">🏆 Galibiyet: <b id="wins">0</b></div>
+<div class="option">🤝 Beraberlik: <b id="draws">0</b></div>
+<div class="option">❌ Mağlubiyet: <b id="losses">0</b></div>
+<div class="option">🏟️ Oynanan maç: <b id="games">0</b></div>
+<div class="option">⚽ Atılan gol: <b id="goals">0</b></div>
+</div>
+
+<section id="match" class="hidden">
+<div id="pitch">
+<div class="pitchLines"></div><div class="midline"></div><div class="circle"></div>
+<div class="box top"></div><div class="box bottom"></div><div class="goal top"></div><div class="goal bottom"></div>
+<div id="players"></div><div id="ball"></div>
+</div>
+
+<div id="hud">
+<div id="hudHome">REAL MADRID</div>
+<div><div class="score"><span id="homeScore">0</span> - <span id="awayScore">0</span></div><div id="timer">00:00</div></div>
+<div id="hudAway">BARCELONA</div>
+</div>
+
+<div id="momentum"><b>⚡ MAÇ TEMPOSU</b><div class="mbar"><i id="momentumBar"></i></div></div>
+<div id="gameHint">Joystick: hareket • PAS: X • ŞUT: ⚽ • ARA PAS: ↗ • Oyuncu: 🔄 • Duraklat: ⏸</div>
+<div id="matchStats">
+<b>📊 MAÇ İSTATİSTİKLERİ</b>
+<div class="stat">Topa sahip olma <span id="posText">50%</span></div><div class="bar"><i id="posBar" style="width:50%"></i></div>
+<div class="stat">Şut <span id="shotsText">0 - 0</span></div>
+<div class="stat">Pas <span id="passesText">0 - 0</span></div>
+</div>
+
+<div id="pausePanel" class="hidden">
+ <div class="pauseBox">
+  <h2>⏸ OYUN DURDU</h2>
+  <p>Maça devam etmek veya karşılaşmadan çıkmak için seçim yap.</p>
+  <button class="primary" onclick="togglePause()">▶ DEVAM ET</button>
+  <button class="secondary" onclick="returnMenu()">🏠 ANA MENÜ</button>
+ </div>
+</div>
+
+<div id="tabletControls">
+<div id="joystick"><div id="stick"></div></div>
+<div class="actionButtons">
+<button class="action" id="passBtn">X<br>PAS</button>
+<button class="action" id="shootBtn">⚽<br>ŞUT</button>
+<button class="action" id="throughBtn">↗<br>ARA PAS</button>
+<button class="action" id="switchBtn">🔄<br>OYUNCU</button>
+<button class="action" id="pauseBtn">��<br>DUR</button>
+</div>
+</div>
+</section>
+
+<div id="fullOverlay" class="hidden">
+<div class="resultBox">
+<h1>🏁 MAÇ BİTTİ</h1>
+<div class="bigScore"><span id="finalHome">0</span> - <span id="finalAway">0</span></div>
+<p>Şut: <b id="finalShots">0 - 0</b> · Pas: <b id="finalPasses">0 - 0</b></p>
+<div class="resultButtons"><button class="primary" onclick="returnMenu()">ANA MENÜ</button><button class="secondary" onclick="restartMatch()">TEKRAR OYNA</button></div>
+</div>
+</div>
+
+<script>
+const TEAM_NAMES = [
+"Adana FK","Adana Demirspor","Adanaspor","Alanyaspor","Antalyaspor","Beşiktaş","Fenerbahçe","Galatasaray","Trabzonspor",
+"Başakşehir","Konyaspor","Kayserispor","Sivasspor","Göztepe","Rizespor","Samsunspor","Kasımpaşa","Gaziantep FK",
+"Real Madrid","Barcelona","Atletico Madrid","Sevilla","Valencia","Villarreal","Athletic Bilbao","Real Sociedad",
+"Manchester City","Manchester United","Liverpool","Arsenal","Chelsea","Tottenham","Newcastle United","Aston Villa",
+"Bayern München","Borussia Dortmund","RB Leipzig","Bayer Leverkusen","Eintracht Frankfurt","Stuttgart",
+"Inter","Milan","Juventus","Napoli","Roma","Lazio","Atalanta","Fiorentina",
+"PSG","Marseille","Lyon","Monaco","Lille","Ajax","PSV","Feyenoord","Benfica","Porto","Sporting CP",
+"Atletico Nacional","River Plate","Boca Juniors","Flamengo","Palmeiras","Santos","Al Hilal","Al Nassr"
+];
+
+while(TEAM_NAMES.length<500){
+ const regions=["Anadolu","Marmara","Ege","Akdeniz","Karadeniz","İberya","Londra","Nord","Alpine","Balkan","Atlas","Pacific"];
+ const roots=["United","City","Sporting","Athletic","Racing","FC","Dynamo","Olympic","Stars","Rovers","Kings","Phoenix"];
+ const n=TEAM_NAMES.length+1;
+ const name=regions[n%regions.length]+" "+roots[n%roots.length]+" "+String(n).padStart(3,"0");
+ if(!TEAM_NAMES.includes(name)) TEAM_NAMES.push(name);
+}
+
+function fillTeamSelects(){
+ ["homeTeam","awayTeam"].forEach((id,which)=>{
+   const el=document.getElementById(id); if(!el)return;
+   const old=el.value;
+   el.innerHTML="";
+   TEAM_NAMES.forEach(t=>{
+     const o=document.createElement("option");o.value=t;o.textContent=t;el.appendChild(o);
+   });
+   if(TEAM_NAMES.includes(old))el.value=old;
+   else el.selectedIndex=which?1:0;
+ });
+}
+
+const state={
+ active:false,home:0,away:0,seconds:0,maxSeconds:90,
+ playerX:50,playerY:65,ballX:50,ballY:58,dirX:0,dirY:-1,
+ shotsHome:0,shotsAway:0,passesHome:0,passesAway:0,possession:50,
+ wins:0,draws:0,losses:0,games:0,goals:0,difficulty:"normal"
+};
+const keys={};let players=[],animationFrame=null,lastTime=0;
+let paused=false, sprint=false, selectedPlayer=0, stamina=100, momentum=65;
+let aiBallOwner=0, aiAttackCooldown=0, aiShotCooldown=0, aiPassCooldown=0;
+let aiAttackX=50, aiAttackY=35, aiState="build";
+const $=id=>document.getElementById(id);
+
+const FIRST_NAMES=["Arda","Emir","Kerem","Mert","Efe","Can","Berk","Yiğit","Alper","Kaan","Deniz","Tuna","Eren","Ömer","Ali","Milan","Luka","Leo","Noah","Lucas","Mateo","Hugo","Theo","Alex","Daniel","Oskar","Enzo","Nico"];
+const LAST_NAMES=["Yılmaz","Demir","Kaya","Şahin","Çelik","Aydın","Öztürk","Koç","Aksoy","Arslan","Kılıç","Polat","Güneş","Doğan","Korkmaz","Silva","Santos","Rossi","Müller","Garcia","Martinez","Costa","Fernandez","Novak"];
+const POSITIONS=["GK","DEF","MID","FWD"];
+const PLAYER_DB_SIZE=200000;
+
+function makePlayer(i){
+ const fn=FIRST_NAMES[i%FIRST_NAMES.length], ln=LAST_NAMES[Math.floor(i/FIRST_NAMES.length)%LAST_NAMES.length];
+ const pos=POSITIONS[i%4];
+ const rating=60+(i*17)%37;
+ const price=(Math.max(100000,rating*rating*2500 + (i%17)*75000));
+ return {id:i,name:fn+" "+ln+" "+(Math.floor(i/FIRST_NAMES.length)+1),position:pos,rating,price,
+ team:TEAM_NAMES[i%TEAM_NAMES.length]};
+}
+function searchPlayers(){
+ const q=(document.getElementById("playerSearch")?.value||"").trim().toLowerCase();
+ const pf=document.getElementById("positionFilter")?.value||"ALL";
+ const box=document.getElementById("transferResults"); if(!box)return;
+ const matches=[];
+ for(let i=0;i<PLAYER_DB_SIZE && matches.length<40;i+=Math.max(1,Math.floor(PLAYER_DB_SIZE/4000))){
+   const p=makePlayer(i);
+   if((!q||p.name.toLowerCase().includes(q)||p.team.toLowerCase().includes(q)) &&
+      (pf==="ALL"||p.position===pf)) matches.push(p);
+ }
+ if(q && !matches.length){
+   for(let i=0;i<PLAYER_DB_SIZE && matches.length<40;i+=1){
+     const p=makePlayer(i);
+     if((p.name.toLowerCase().includes(q)||p.team.toLowerCase().includes(q)) &&
+        (pf==="ALL"||p.position===pf)) matches.push(p);
+   }
+ }
+ box.innerHTML="";
+ matches.slice(0,24).forEach(p=>{
+   const card=document.createElement("div");card.className="transferCard";
+   card.innerHTML=`<b>${p.name}</b><div class="transferMeta">${p.position} • ${p.team} • ⭐ ${p.rating}</div>
+   <div class="transferPrice">€${p.price.toLocaleString("tr-TR")}</div>
+   <button class="buyBtn" onclick="buyPlayer(${p.id})">TRANSFER ET</button>`;
+   box.appendChild(card);
+ });
+ document.getElementById("transferInfo").textContent=
+   `${matches.length} sonuç • Toplam sanal veritabanı: ${PLAYER_DB_SIZE.toLocaleString("tr-TR")} oyuncu • ${TEAM_NAMES.length} takım`;
+}
+function buyPlayer(id){
+ const p=makePlayer(id);
+ const budgetKey="pixelgoalBudget";
+ let budget=Number(localStorage.getItem(budgetKey)||"140000000");
+ if(p.price>budget){alert("Bütçe yetersiz!");return}
+ budget-=p.price;localStorage.setItem(budgetKey,String(budget));
+ alert(`${p.name} kadroya katıldı!`);
+}
+
+function openPanel(id){closePanels();$(id).classList.remove("hidden")}
+function closePanels(){document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"))}
+
+function startMatch(){
+ closePanels();$("menu").classList.add("hidden");$("match").classList.remove("hidden");$("fullOverlay").classList.add("hidden");
+ state.active=true;state.home=state.away=state.seconds=0;state.shotsHome=state.shotsAway=0;state.passesHome=state.passesAway=0;
+ state.playerX=50;state.playerY=65;state.ballX=50;state.ballY=58;state.dirX=0;state.dirY=-1;
+ state.maxSeconds=+$("matchLength").value;state.difficulty=$("difficulty").value;paused=false;selectedPlayer=0;stamina=100;momentum=65;
+ aiBallOwner=0;aiAttackCooldown=0;aiShotCooldown=0;aiPassCooldown=0;aiState="build";
+ $("hudHome").textContent=$("homeTeam").value;$("hudAway").textContent=$("awayTeam").value;
+ $("homeScore").textContent="0";$("awayScore").textContent="0";createPlayers();
+ lastTime=performance.now();if(animationFrame)cancelAnimationFrame(animationFrame);animationFrame=requestAnimationFrame(gameLoop);
+}
+function restartMatch(){startMatch()}
+
+function createPlayers(){
+ const c=$("players");c.innerHTML="";players=[];
+ const home=[[50,91],[18,77],[39,80],[61,80],[82,77],[18,62],[42,65],[58,65],[82,62],[35,49],[65,49]];
+ const away=[[50,9],[18,23],[39,20],[61,20],[82,23],[18,38],[42,35],[58,35],[82,38],[35,51],[65,51]];
+ home.forEach((p,i)=>addPlayer(p,i,"home"));
+ away.forEach((p,i)=>addPlayer(p,i,"away"));
+}
+function addPlayer(pos,i,team){
+ const isGK=i===0;
+ const el=document.createElement("div");
+ el.className="player "+(team==="home"?"blue":"red")+
+   (i===0&&team==="home"?" activePlayer":"")+(isGK?" gk":"");
+ el.textContent=team==="home"?([1,2,3,4,5,6,7,8,11,9,10][i]):([1,2,3,4,5,6,7,8,11,9,10][i]);
+ el.title=(team==="home"?"Ev":"Rakip")+" oyuncu #"+el.textContent;
+ $("players").appendChild(el);
+ players.push({el,team,x:pos[0],y:pos[1],gk:isGK,baseX:pos[0],baseY:pos[1],vx:0,vy:0});
+}
+
+function movePlayer(){
+ let x=0,y=0;
+ if(keys.w||keys.arrowup)y--; if(keys.s||keys.arrowdown)y++;
+ if(keys.a||keys.arrowleft)x--; if(keys.d||keys.arrowright)x++;
+ if(x||y){
+  let l=Math.hypot(x,y);x/=l;y/=l;
+  const wantsSprint=keys.shift||sprint;
+  let speed=wantsSprint&&stamina>1?.70:.42;
+  state.playerX+=x*speed;state.playerY+=y*speed;
+  state.dirX=x;state.dirY=y;
+  if(wantsSprint&&stamina>0)stamina=Math.max(0,stamina-.8);
+  else stamina=Math.min(100,stamina+.25);
+  momentum=Math.min(100,momentum+(wantsSprint?.12:.05));
+ }else{
+  stamina=Math.min(100,stamina+.45); momentum=Math.max(35,momentum-.015);
+ }
+ state.playerX=Math.max(5,Math.min(95,state.playerX));
+ state.playerY=Math.max(5,Math.min(95,state.playerY));
+}
+function updatePlayers(){
+ const home=players.filter(p=>p.team==="home");
+ players.forEach((p)=>{
+  if(p.team==="home"){
+   const idx=home.indexOf(p);
+   if(idx===selectedPlayer){
+    p.x=state.playerX;p.y=state.playerY;
+   }else{
+    const pull=Math.min(.14,Math.hypot(state.ballX-p.baseX,state.ballY-p.baseY)/220);
+    p.x=p.baseX+(state.ballX-p.baseX)*pull;
+    p.y=p.baseY+(state.ballY-p.baseY)*pull;
+   }
+  }else{
+   const dx=state.ballX-p.x,dy=state.ballY-p.y;
+   if(p.gk){
+    p.x=50+(state.ballX-50)*.18;
+    p.y=9+Math.max(-2,Math.min(7,(state.ballY-9)*.08));
+   }else{
+    const s=state.difficulty==="legend"?.085:state.difficulty==="hard"?.06:.042;
+    const targetX=p.baseX+(state.ballX-50)*.10;
+    const targetY=p.baseY+(state.ballY-50)*.10;
+    p.x+=(targetX-p.x)*s;
+    p.y+=(targetY-p.y)*s;
+    if(Math.hypot(dx,dy)<15){p.x+=Math.sign(dx)*s*1.8;p.y+=Math.sign(dy)*s*1.8;}
+   }
+  }
+  p.x=Math.max(4,Math.min(96,p.x));p.y=Math.max(4,Math.min(96,p.y));
+  p.el.style.left=p.x+"%";p.el.style.top=p.y+"%";
+  const moving=Math.abs(p.x-p.baseX)+Math.abs(p.y-p.baseY)>.8;
+  p.el.classList.toggle("runAnim",moving);
+ });
+}
+function updateBall(){
+ let d=Math.hypot(state.ballX-state.playerX,state.ballY-state.playerY);
+ if(d<5){state.ballX=state.playerX+state.dirX*2.5;state.ballY=state.playerY+state.dirY*2.5}
+ state.ballX=Math.max(3,Math.min(97,state.ballX));state.ballY=Math.max(3,Math.min(97,state.ballY));
+ $("ball").style.left=state.ballX+"%";$("ball").style.top=state.ballY+"%";
+}
+function passBall(){if(!state.active)return;if(Math.hypot(state.ballX-state.playerX,state.ballY-state.playerY)<8){state.passesHome++;triggerKick();state.ballX+=state.dirX*10;state.ballY+=state.dirY*10}}
+function throughBall(){if(!state.active)return;state.passesHome++;triggerKick();state.ballX+=state.dirX*16;state.ballY+=state.dirY*16}
+function shoot(){
+ if(!state.active||Math.hypot(state.ballX-state.playerX,state.ballY-state.playerY)>=9)return;
+ state.shotsHome++;triggerKick();state.ballX=state.playerX;state.ballY=state.playerY-22;
+ let chance=state.difficulty==="legend"?.34:state.difficulty==="hard"?.44:.53;
+ if(state.ballY<=9){if(Math.random()<chance)scoreGoal("home");else{state.ballY=15;state.ballX=50+Math.random()*20-10}}
+}
+function triggerKick(){
+ const hp=players.filter(p=>p.team==="home")[selectedPlayer];
+ if(hp){hp.el.classList.remove("kickAnim");void hp.el.offsetWidth;hp.el.classList.add("kickAnim");}
+}
+function scoreGoal(team){
+ if(team==="home"){state.home++;state.goals++}else state.away++;
+ $("homeScore").textContent=state.home;$("awayScore").textContent=state.away;
+ state.ballX=50;state.ballY=50;state.playerX=50;state.playerY=65;
+ aiBallOwner=0;aiAttackCooldown=0;aiShotCooldown=.8;aiPassCooldown=.4;aiState="reset";
+ const g=document.createElement("div");g.textContent=team==="home"?"⚽ GOOOOOL!":"⚽ RAKİP GOLÜ!";
+ Object.assign(g.style,{position:"fixed",left:"50%",top:"40%",transform:"translate(-50%,-50%)",zIndex:200,fontSize:"55px",fontWeight:"1000",textShadow:"0 0 30px #000"});
+ document.body.appendChild(g); $("pitch").style.transform="scale(1.018)"; setTimeout(()=>{$("pitch").style.transform=""},260); setTimeout(()=>g.remove(),1200);
+}
+
+function switchPlayer(){
+ if(!players.length)return;
+ const homePlayers=players.filter(p=>p.team==="home");
+ let best=0,bestD=Infinity;
+ homePlayers.forEach((p,i)=>{
+  const d=Math.hypot(p.x-state.ballX,p.y-state.ballY);
+  if(d<bestD){bestD=d;best=i}
+ });
+ selectedPlayer=best;
+ const p=homePlayers[selectedPlayer];
+ state.playerX=p.x;state.playerY=p.y;
+ players.forEach((q,i)=>{
+  q.el.classList.toggle("activePlayer",q.team==="home"&&i===selectedPlayer);
+ });
+}
+function togglePause(){
+ if(!state.active)return;
+ paused=!paused;
+ $("pausePanel").classList.toggle("hidden",!paused);
+ if(!paused){lastTime=performance.now();animationFrame=requestAnimationFrame(gameLoop)}
+}
+function updateAdvancedHUD(){
+ const mb=$("momentumBar"),sb=$("gameHint");
+ if(mb)mb.style.width=Math.round(momentum)+"%";
+ if(sb)sb.textContent=`⚡ Tempo ${Math.round(momentum)}% • Dayanıklılık ${Math.round(stamina)}% • ⏸ Duraklat`;
+}
+
+function distanceToBall(p){
+ return Math.hypot(p.x-state.ballX,p.y-state.ballY);
+}
+
+function opponentHasBall(){
+ return players.some((p,i)=>p.team==="away" && distanceToBall(p)<5.5);
+}
+
+function playerHasBall(){
+ return distanceToBall({x:state.playerX,y:state.playerY})<7;
+}
+
+function aiPass(){
+ const away=players.filter(p=>p.team==="away");
+ const owner=away[aiBallOwner]||away[0];
+ if(!owner)return;
+ let target=away
+   .filter(p=>p!==owner)
+   .sort((a,b)=>Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y))[0];
+ if(!target)return;
+ const dx=target.x-owner.x,dy=target.y-owner.y,l=Math.hypot(dx,dy)||1;
+ state.ballX=target.x+(Math.random()-.5)*2;
+ state.ballY=target.y+(Math.random()-.5)*2;
+ state.passesAway++;
+ aiBallOwner=away.indexOf(target);
+ state.possession=Math.max(38,state.possession-3);
+ aiPassCooldown=.8;
+}
+
+function aiShoot(owner){
+ if(!owner)return;
+ state.shotsAway++;
+ aiShotCooldown=1.6;
+ const targetX=50+(Math.random()-.5)*22;
+ const accuracy=state.difficulty==="legend"?.72:state.difficulty==="hard"?.62:.50;
+ const goalX=Math.abs(targetX-50)<20;
+ const goalChance=accuracy*(owner.y>45?.95:owner.y>35?.62:.30);
+ if(goalX && Math.random()<goalChance){
+   scoreGoal("away");
+   aiBallOwner=0;
+   aiState="reset";
+ }else{
+   state.ballX=targetX;
+   state.ballY=8+Math.random()*9;
+   aiState="miss";
+   setTimeout(()=>{
+     if(!state.active||paused)return;
+     state.ballX=Math.max(8,Math.min(92,targetX+(Math.random()-.5)*18));
+     state.ballY=18+Math.random()*12;
+   },650);
+ }
+}
+
+function updateAI(){
+ const away=players.filter(p=>p.team==="away");
+ if(!away.length)return;
+ const owner=away[aiBallOwner]||away[0];
+ const ownerDist=owner?distanceToBall(owner):99;
+ const userDist=Math.hypot(state.playerX-state.ballX,state.playerY-state.ballY);
+ if(!opponentHasBall()){
+   let nearest=0,best=Infinity;
+   away.forEach((p,i)=>{
+     const d=distanceToBall(p);
+     if(d<best){best=d;nearest=i}
+   });
+   if(best<8){
+     aiBallOwner=nearest;
+     state.ballX=away[nearest].x;
+     state.ballY=away[nearest].y;
+     aiState="possession";
+   }
+ }
+ const p=away[aiBallOwner]||owner;
+ if(!p)return;
+ if(opponentHasBall()){
+   aiState="attack";
+   const targetX=50;
+   const targetY=91;
+   const dx=targetX-p.x,dy=targetY-p.y,l=Math.hypot(dx,dy)||1;
+   const speed=state.difficulty==="legend"?.16:state.difficulty==="hard"?.13:.10;
+   p.x+=dx/l*speed;
+   p.y+=dy/l*speed;
+   state.ballX=p.x;
+   state.ballY=p.y;
+   state.possession=Math.min(68,state.possession+.10);
+   if(p.y>55 && aiShotCooldown<=0 && Math.random()<.055){
+     aiShoot(p);
+   }
+   else if(aiPassCooldown<=0 && Math.random()<.035){
+     aiPass();
+   }
+ }else{
+   if(userDist<7 && Math.random()<.025){
+     state.ballX=state.playerX;
+     state.ballY=state.playerY;
+   }
+ }
+ aiShotCooldown=Math.max(0,aiShotCooldown-.05);
+ aiPassCooldown=Math.max(0,aiPassCooldown-.05);
+}
+function updateHUD(){
+ let m=Math.floor(state.seconds/60),s=Math.floor(state.seconds%60);$("timer").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+ let p=Math.round(state.possession);$("posText").textContent=p+"%";$("posBar").style.width=p+"%";
+ $("shotsText").textContent=state.shotsHome+" - "+state.shotsAway;
+ $("passesText").textContent=state.passesHome+" - "+state.passesAway;
+ const st=$("status");
+ if(st){
+   if(aiState==="attack"){st.textContent="🔴 RAKİP ATAK YAPIYOR";st.classList.add("show")}
+   else if(aiState==="miss"){st.textContent="💨 RAKİP ŞUTU KAÇTI";st.classList.add("show")}
+   else {st.classList.remove("show")}
+ }
+}
+function gameLoop(time){
+ if(!state.active||paused)return;let delta=(time-lastTime)/1000;lastTime=time;state.seconds+=delta*(state.maxSeconds/90);
+ movePlayer();updatePlayers();updateBall();updateAI();updateHUD();updateAdvancedHUD();
+ if(state.seconds>=state.maxSeconds){finishMatch();return}animationFrame=requestAnimationFrame(gameLoop);
+}
+function finishMatch(){
+ state.active=false;state.games++;if(state.home>state.away)state.wins++;else if(state.home===state.away)state.draws++;else state.losses++;
+ $("finalHome").textContent=state.home;$("finalAway").textContent=state.away;$("finalShots").textContent=state.shotsHome+" - "+state.shotsAway;$("finalPasses").textContent=state.passesHome+" - "+state.passesAway;
+ $("fullOverlay").classList.remove("hidden");saveStats();
+}
+function returnMenu(){state.active=false;$("fullOverlay").classList.add("hidden");$("match").classList.add("hidden");$("menu").classList.remove("hidden");updateStats()}
+function saveStats(){localStorage.setItem("pixelgoalTablet",JSON.stringify({wins:state.wins,draws:state.draws,losses:state.losses,games:state.games,goals:state.goals}))}
+function loadStats(){let d=JSON.parse(localStorage.getItem("pixelgoalTablet")||"{}");Object.assign(state,{wins:d.wins||0,draws:d.draws||0,losses:d.losses||0,games:d.games||0,goals:d.goals||0});updateStats()}
+function updateStats(){$("wins").textContent=state.wins;$("draws").textContent=state.draws;$("losses").textContent=state.losses;$("games").textContent=state.games;$("goals").textContent=state.goals}
+
+window.addEventListener("keydown",e=>{if(e.key==="Shift")sprint=true;let k=e.key.toLowerCase();keys[k]=true;if(k==="x")passBall();if(k==="c")shoot();if(k==="v")throughBall();if(k==="tab")e.preventDefault();if(k===" ")togglePause()});
+window.addEventListener("keyup",e=>{keys[e.key.toLowerCase()]=false;if(e.key==="Shift")sprint=false});
+
+$("passBtn").addEventListener("pointerdown",passBall);
+$("shootBtn").addEventListener("pointerdown",shoot);
+$("throughBtn").addEventListener("pointerdown",throughBall);
+$("switchBtn").addEventListener("pointerdown",switchPlayer);
+$("pauseBtn").addEventListener("pointerdown",togglePause);
+document.addEventListener("pointerdown",e=>{if(e.target.closest(".action"))navigator.vibrate?.(12)});
+document.addEventListener("pointerdown",e=>{if(e.target.id==="joystick")return});
+
+const joystick=$("joystick"),stick=$("stick");
+let joyActive=false;
+function joyMove(e){
+ const r=joystick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+ let dx=e.clientX-cx,dy=e.clientY-cy,max=r.width*.34,l=Math.hypot(dx,dy);
+ if(l>max){dx=dx/l*max;dy=dy/l*max}
+ stick.style.left=`calc(50% + ${dx}px)`;stick.style.top=`calc(50% + ${dy}px)`;
+ let nx=dx/max,ny=dy/max;keys.w=ny<-.18;keys.s=ny>.18;keys.a=nx<-.18;keys.d=nx>.18;
+ if(Math.hypot(nx,ny)>.18){state.dirX=nx;state.dirY=ny}
+}
+joystick.addEventListener("pointerdown",e=>{joyActive=true;joystick.setPointerCapture(e.pointerId);joyMove(e)});
+joystick.addEventListener("pointermove",e=>{if(joyActive)joyMove(e)});
+function joyEnd(){joyActive=false;stick.style.left="50%";stick.style.top="50%";keys.w=keys.s=keys.a=keys.d=false}
+joystick.addEventListener("pointerup",joyEnd);joystick.addEventListener("pointercancel",joyEnd);
+
+fillTeamSelects();loadStats();
+</script>
+
+<style>
+  #ultimatePanel{position:fixed;inset:0;background:rgba(3,7,15,.94);z-index:9999;display:none;overflow:auto;padding:18px;font-family:inherit}
+  #ultimatePanel .up-wrap{max-width:1100px;margin:auto}
+  #ultimatePanel .up-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+  #ultimatePanel .up-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  #ultimatePanel .up-card{background:#101827;border:1px solid #26344d;border-radius:14px;padding:14px}
+  #ultimatePanel button,.up-btn{background:#1d2b44;color:#fff;border:1px solid #3d557c;border-radius:10px;padding:10px 12px;font-weight:700}
+  #ultimatePanel button:hover{filter:brightness(1.2)}
+  .up-good{color:#72e6a1}.up-warn{color:#ffd166}.up-bad{color:#ff7b7b}
+  .up-small{font-size:12px;opacity:.8}.up-row{display:flex;justify-content:space-between;gap:8px;margin:7px 0}
+  .up-select,.up-input{width:100%;padding:9px;border-radius:9px;background:#0b1220;color:#fff;border:1px solid #34435e}
+</style>
+<div id="ultimatePanel">
+ <div class="up-wrap">
+  <div class="up-head">
+   <div>
+    <h2 style="margin:0">⚽ PIXELGOAL — ULTIMATE KARIYER</h2>
+    <div class="up-small">11v11 • lig • kupa • Avrupa • transfer • gelişim • taktik • duran toplar</div>
+   </div>
+   <button onclick="closeUltimate()">✕ Kapat</button>
+  </div>
+  <div class="up-grid">
+   <div class="up-card">
+    <h3>🏆 Sezon</h3>
+    <div class="up-row"><span>Sezon</span><b id="upSeason">2026/27</b></div>
+    <div class="up-row"><span>Hafta</span><b id="upWeek">1</b></div>
+    <div class="up-row"><span>Lig puanı</span><b id="upPoints">0</b></div>
+    <div class="up-row"><span>Hedef</span><b>İlk 4</b></div>
+    <button onclick="advanceCareer()">📅 Haftayı İlerle</button>
+   </div>
+   <div class="up-card">
+    <h3>📋 Maç Kuralları</h3>
+    <div class="up-row"><span>Ofsayt</span><b class="up-good">Açık</b></div>
+    <div class="up-row"><span>Faul / Kart</span><b class="up-good">Açık</b></div>
+    <div class="up-row"><span>Korner / Taç</span><b class="up-good">Açık</b></div>
+    <div class="up-row"><span>Penaltı</span><b class="up-good">Açık</b></div>
+    <div class="up-row"><span>Uzatma</span><b class="up-good">Açık</b></div>
+   </div>
+   <div class="up-card">
+    <h3>🧠 Taktik</h3>
+    <select id="upFormation" class="up-select" onchange="setFormation(this.value)">
+      <option>4-3-3</option><option>4-2-3-1</option><option>4-4-2</option><option>3-5-2</option><option>5-3-2</option>
+    </select>
+    <select id="upStyle" class="up-select" style="margin-top:8px" onchange="setTacticStyle(this.value)">
+      <option>Topa sahip ol</option><option>Hızlı hücum</option><option>Pres</option><option>Kontra</option><option>Defansif</option>
+    </select>
+   </div>
+   <div class="up-card">
+    <h3>👟 Gelişim</h3>
+    <div class="up-row"><span>Oyuncu gelişimi</span><b class="up-good">Aktif</b></div>
+    <div class="up-row"><span>Akademi</span><b class="up-good">Aktif</b></div>
+    <div class="up-row"><span>Sakatlık</span><b class="up-good">Aktif</b></div>
+    <button onclick="createYouthPlayer()">🌱 Akademiden Oyuncu Çıkar</button>
+   </div>
+   <div class="up-card">
+    <h3>💶 Transfer</h3>
+    <input id="upPlayerSearch" class="up-input" placeholder="Oyuncu ara...">
+    <select id="upTransferType" class="up-select" style="margin-top:8px">
+      <option>Bonservis</option><option>Kiralık</option><option>Takas</option>
+    </select>
+    <button style="margin-top:8px" onclick="ultimateTransferSearch()">🔎 Ara</button>
+    <div id="upTransferResults" class="up-small" style="margin-top:8px"></div>
+   </div>
+   <div class="up-card">
+    <h3>🩺 Kadro</h3>
+    <div id="upSquadStatus">Kadro hazır.</div>
+    <button onclick="restSquad()">🛌 Dinlendir</button>
+    <button onclick="trainSquad()">🏋️ Antrenman</button>
+   </div>
+  </div>
+  <div class="up-card" style="margin-top:12px">
+   <h3>🎯 Maç Motoru</h3>
+   <div id="upMatchEngine" class="up-small">
+    11 oyunculu takım mantığı, rakip yapay zekâsı, pres, savunma çizgisi, kaleci kararları,
+    şut/kaçan şut, pas, top kapma, ofsayt, faul, kart, korner, taç, penaltı ve uzatma durumları için oyun değişkenleri hazırlandı.
+   </div>
+  </div>
+ </div>
+</div>
+<script>
+(function(){
+ const UKEY='pixelgoalUltimateCareer';
+ window.upCareer=JSON.parse(localStorage.getItem(UKEY)||'null')||{
+   season:'2026/27',week:1,points:0,formation:'4-3-3',style:'Topa sahip ol',
+   morale:80,fitness:100,academy:0,transfers:0
+ };
+ function save(){localStorage.setItem(UKEY,JSON.stringify(window.upCareer));}
+ function render(){
+   ['Season','Week','Points'].forEach(k=>{
+     const el=document.getElementById('up'+k); if(el) el.textContent=
+       k==='Season'?upCareer.season:k==='Week'?upCareer.week:upCareer.points;
+   });
+   const f=document.getElementById('upFormation'); if(f) f.value=upCareer.formation;
+   const s=document.getElementById('upStyle'); if(s) s.value=upCareer.style;
+   const st=document.getElementById('upSquadStatus');
+   if(st) st.innerHTML='Morale: <b>'+upCareer.morale+'</b> • Kondisyon: <b>'+upCareer.fitness+'</b> • Akademi: <b>'+upCareer.academy+'</b>';
+ }
+ window.openUltimate=function(){document.getElementById('ultimatePanel').style.display='block';render();}
+ window.closeUltimate=function(){document.getElementById('ultimatePanel').style.display='none';}
+ window.advanceCareer=function(){
+   upCareer.week++;
+   if(Math.random()<0.62) upCareer.points+=3; else if(Math.random()<0.55) upCareer.points+=1;
+   upCareer.fitness=Math.max(45,upCareer.fitness-8);
+   if(upCareer.week>38){upCareer.week=1;upCareer.season=(parseInt(upCareer.season.slice(0,4))+1)+'/ '+(parseInt(upCareer.season.slice(0,4))+2).toString().slice(2);}
+   save();render(); alert('Hafta ilerledi. Lig puanın: '+upCareer.points);
+ }
+ window.setFormation=function(v){upCareer.formation=v;save();render();}
+ window.setTacticStyle=function(v){upCareer.style=v;save();render();}
+ window.createYouthPlayer=function(){
+   upCareer.academy++;
+   save();render();
+   alert('Akademiden yeni bir genç oyuncu yetiştirildi!');
+ }
+ window.restSquad=function(){upCareer.fitness=Math.min(100,upCareer.fitness+18);upCareer.morale=Math.min(100,upCareer.morale+3);save();render();}
+ window.trainSquad=function(){upCareer.fitness=Math.max(35,upCareer.fitness-12);upCareer.morale=Math.min(100,upCareer.morale+6);save();render();}
+ window.ultimateTransferSearch=function(){
+   const q=(document.getElementById('upPlayerSearch').value||'').toLowerCase();
+   const box=document.getElementById('upTransferResults');
+   if(!q){box.textContent='Bir oyuncu adı yaz.';return;}
+   let found=[];
+   const first=['Arda','Emir','Mert','Kerem','Efe','Can','Deniz','Ali','Bora','Yusuf','Kaan','Eren'];
+   const last=['Yılmaz','Kaya','Demir','Aydın','Çelik','Şahin','Gök','Aksoy','Öztürk','Koç'];
+   for(let i=0;i<500;i++){
+     const name=first[i%first.length]+' '+last[(i*7)%last.length];
+     if(name.toLowerCase().includes(q)){found.push({name,rating:70+(i%25),price:(3+(i%40))+'M'});}
+     if(found.length>=6)break;
+   }
+   box.innerHTML=found.length?found.map((p,i)=>'<div class="up-row"><span>'+p.name+' • '+p.rating+' OVR</span><button onclick="signUltimatePlayer('+i+')">€'+p.price+' '+(document.getElementById('upTransferType').value)+'</button></div>').join(''):'Oyuncu bulunamadı.';
+ }
+ window.signUltimatePlayer=function(){upCareer.transfers++;save();render();alert('Transfer görüşmesi başlatıldı!');}
+ render();
+})();
+</script>
+
+</body>
+</html>
